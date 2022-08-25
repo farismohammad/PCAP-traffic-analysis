@@ -23,12 +23,12 @@ Link to exercise and pcap files `https://www.malware-traffic-analysis.net/2022/0
  #### <b><u> 172.16.0.149 | desktop-kpq9fdb$ | 00:1b:fc:7b:d1:c0 | nick.montgomery </b></u>
 
  \
- On 2022-02-23 at 18:24 UTC Nick Montgomerys PC made a GET request to `64.34.171.228:80` for `/c7g8t/zbBYgukXYxzAF2hZc/` which sent a file `filename="2mIaAtxprmXlTLZeFjkIqbexiFXkZkJ.dll"` and saved to disk as `zbBYgukXYxzAF2hZc.` Uploading this file to VirusTotal identifies it as emotet with 58/70 detections. <br> The md5 hash: `57595f82e73bed372c669e907d4db642` <br>
+ On 2022-02-23 at 18:24 UTC Nick Montgomerys PC made a GET request to `64.34.171.228:80` for `/c7g8t/zbBYgukXYxzAF2hZc/` which sent a file `filename="2mIaAtxprmXlTLZeFjkIqbexiFXkZkJ.dll"` and saved to disk as `zbBYgukXYxzAF2hZc.` Uploading this file to VirusTotal identified it as emotet with 58/70 detections. <br> The md5 hash: `57595f82e73bed372c669e907d4db642` <br>
  SHA256 hash: `14b57211308ac8ad2a63c965783d9ba1c2d1930d0cafd884374d143a481f9bf3` <br>
  
  I parsed the file using floss and obseved some WindowsAPI calls and other .dll's being loaded. I also found what seemed like some sort of a key `D45FD31B-5C6E-11D1-9EC1-00C04FD7081F`. After some research i found it was a registry key edit recommended by Microsoft as a way to temporarily prevent the Agent ActiveX control from running in Internet Explorer as mitigation for MS07-051 [3]. The floss output can be found in zip as floss_zbBYgukXYxzAF2hZc.txt
 
- The infection on Nick.Montgommerys PC likely occured through an email campaign. There was some spambot activity observed on Nick.Montgomerys' PC after the infection occured. I was able to extract an email which contained a base64 encoded .xsl file that was identified as trojan/emotet on Virustotal by multiple vendors. 
+ The infection on Nick.Montgommerys PC likely occured through a email. There was some spambot activity observed on Nick.Montgomerys' PC after the infection occured. I was able to extract an email which contained a base64 encoded .xsl file that was identified as trojan/emotet on Virustotal by multiple vendors. 
  
  Analyzing SMTP traffic, I found bas64 encoded username and passwords being sent to authenticate to a email client `mail.idn-ltd.com - RaidenMAILD ESMTP` using the credentials: <br> `Username:hrd5_hr@idn-ltd.comPassword:!Efrid4lts3#ok`<br>`Username:bcc01602Password:AT7TR722` 
 
@@ -38,10 +38,10 @@ Link to exercise and pcap files `https://www.malware-traffic-analysis.net/2022/0
 
   #### <b><u> 172.16.0.170 | desktop-w5tftqy$ | 00:12:f0:64:d1:d9 | everett.french </b></u>
 
- On 2022-02-23 at 18:25 UTC Everett Frenchs' PC established a HTTPS connection with 178.211.56.194 (dalgahavuzu[.]com) on port 443. Querying the IP on urlhaus gives no results and alientvault has 0 pulses, however querying the domain name results a hit on urlhaus and 4 pulses on alientvault OTX identifying it as a trojan/emotet by TA542.
+ On 2022-02-23 at 18:25 UTC Everett Frenchs' PC established a HTTPS connection with 178.211.56.194 (dalgahavuzu[.]com) on port 443. Querying the IP on UrlHaus gives no results and AlientVault has 0 pulses, however querying the domain name results a hit on UrlHaus and 4 pulses on AlientVault OTX identifying it as a trojan/emotet by TA542.
  After the intital call to dalgahavuzu[.]com Everetts' PC established multiple HTTPS connection over 443 to known malicious IPs', identified to be part of the emotet epoch 5 botnet. [4] 
 
- The following ip addresses were identified to be malicious:
+ The IP addresses are:
 
  `27.254.174.84` https on 443. OTX identified as emotet epoch 4 or 5 and by  TA542 Mummy Spider. Thailand
 
@@ -112,11 +112,11 @@ Link to exercise and pcap files `https://www.malware-traffic-analysis.net/2022/0
 ---
  #### <b><u> 172.16.0.131 | desktop-vd151o7$ | 2c:27:d7:d2:06:f5 | tricia.becker </b></u>
 
- On 2022-02-23 at 18:29 UTC Tricia Beckers' PC made a GET request to `156.96.154.210` for `/Ocklqc.jpg`. Which seems like a revered binary (I could read 'This program cannot be run in DOS mode.' in reverse). I reversed it using cyberchef and then used the file to identify the file type which identifies it as `PE32 executable (DLL) (console) Intel 80386 Mono/.Net assembly, for MS Windows`. Uploading the file to virus total gets us 33/66 detections making it very likely its malicious but does not identify it anything other than a generic trojan. <br> The floss out can be found in the zip as `floss_Ocklqc.txt`
+ On 2022-02-23 at 18:29 UTC Tricia Beckers' PC made a GET request to `156.96.154.210` for `/Ocklqc.jpg`. Which seems like a revered binary (I could read 'This program cannot be run in DOS mode.' in reverse). I reversed it using cyberchef and then used the 'Detect File Type' operation to identify the file as `PE32 executable (DLL) (console) Intel 80386 Mono/.Net assembly, for MS Windows`. Uploading the file to virus total gets us 33/66 detections making it very likely its malicious but does not identify it anything other than a generic trojan. <br> The floss output can be found in the zip as `floss_Ocklqc.txt` <br>
  MD5:`b2e1965fe29736b5bdb221c108c4c78f`<br>
  sha256:`c7fe6fe3e567e3e4c5b43f08c723f5b8b22eb02c1ab3f9f7c5f659bb06b2e240`<br>
 
- Filtering for HTTP trafiic, I see multiple GET requests made with what appears to be base64 encoded request parameter but does not decode to anything. The requests are made to the following IPs. the request pattern in indicative of a formbook(Xloader) infection [5].
+ Filtering for HTTP trafiic, I see multiple GET requests made with what appears to be base64 encoded request parameter. The requests are made to the following IPs. the request pattern in indicative of a formbook(Xloader) infection [5].
 
  `104.21.89.147` - /uar3/?OXtd9L=cFNTMFX8k4Sl&WN68=OeYQqIU9fkIjHq0iRTjpk5h8JewsY/FAEEGplD1myE1VivIRdy4CVvbuzuyXb7LJfyhf2G3tozH0TabGGRXNyg==<br>
  `104.16.12.194` - /uar3/?rDK=9rxt2VrP0VOLNd&WN68=I2l43oNVzWohwc97LSEXaWdVqxBOXBdEroFdfarp+DazR9mP3HsZrHA9P20czBHo7A9Q6BtLZHoFBMxs+Q0aUA==<br>
